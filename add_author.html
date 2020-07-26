@@ -7,15 +7,21 @@
     <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
 <body>
-    <a href="index.html" target="_blank">Home</a>
+    <a href="index.html" >Home</a>
     <h1 class="title">Add Authors</h1>
-    <form>
-        <label>First Name: <input type="text"></label>
-        <label>Last Name: <input type="text"></label>
+    <div class="add_new_item">
+        <form>
+            <label>First Name: <input type="text"></label>
+            </br>
+            </br>
+            <label>Last Name: <input type="text"></label>
+            </br>
+            </br>
+            <input type="submit" name="action" value="Add" />
+        </form>
         </br>
-        </br>
-        <input type="submit" name="action" value="Add" />
-        <input type="submit" name="action" value="Cancel" />
-    </form>
+        <button onclick="window.history.back()">Cancel</button>
+    </div>
+    
 </body>
 </html>

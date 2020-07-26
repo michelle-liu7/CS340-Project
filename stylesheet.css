@@ -9,7 +9,7 @@
     text-align: center;
 }
 
-#update_add_book{
+#update_add_block{
     text-align: center;
     padding-bottom: 10px;
 }
@@ -51,5 +51,15 @@ table {
 }
 
 p{
+    text-align: center;
+}
+
+#search_bar{
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+.add_new_item {
     text-align: center;
 }

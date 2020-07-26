@@ -7,31 +7,52 @@
     <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
 <body>
-    <a href="index.html" target="_blank">Home</a>
+    <a href="index.html">Home</a>
     <h1 class="title">Inventory</h1>
-    <div id="update_add_book">
-        <a href="update_book.html" target="_blank" id="update_book">Update</a>
-        <a href="add_book.html" target="_blank" id="add_book">Add</a>
+    <div id="update_add_block">
+        <!--<a href="update_book.html" id="update_book_butt">Update</a>-->
+        <a href="add_book.html" id="add_book_butt">Add</a>
     </div>
+
+    <div id="search_bar">
+        Search Books
+        <form>
+            <select name="genre_filter">
+                <option value="" selected>Select a genre</option>
+                <option value="Mystery">Mystery</option>
+                <option value="Fantasy">Fantasy</option>
+                <option value="Action">Action</option>
+            </select>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
     <table>
         <tr>
             <th>Title</th>
             <th>Issue</th>
-            <th>Author</th>
+            <th>Author Name</th>
             <th>Publisher</th>
+            <th>Genres</th>
             <th>Price</th>
-            <th>ISBN</th>
+            <th>UPC</th>
             <th>Owner</th>
+            <th>Update</th>
+            <th>Delete</th>
         </tr>
         <tr>
             <td>The Batman Who Laughs</td>
             <td>1</td>
             <td>Scott Snyder</td>
             <td>DC Comics</td>
+            <td>Fantasy</td>
             <td>18.00</td>
             <td>9781401294038</td>
             <td>Eric K</td>
+            <td><input type="button" id="edit_button1" value="Edit" class="edit"></td>
+            <td><input type="button" value="Delete" class="delete"></td>
         </tr>
     </table>
+    <script type="text/javascript" src="script.js"></script>
 </body>
 </html>

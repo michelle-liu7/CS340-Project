@@ -1,0 +1,33 @@
+<a href="/">Home</a>
+<h1 class="title">Add/Remove Collectors</h1>
+<div id="update_add_block">
+    <a href="/insertQueries/add_collector" id="add_collector">Add</a>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>DOB</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <!--getCollectors function in collectors.js-->
+        {{#each collectors}}
+        <tr>
+            <td>{{fname}}</td>
+            <td>{{lname}}</td>
+            <td>{{dob}}</td>
+            <td><button class="delete_butt" onclick="deleteCollector({{id}})">Delete</button></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+
+<!--
+    need an object with {title:"Add/Remove Collectors", jsscripts:["deleteCollector.js"]} to render collectors.handlebars
+-->

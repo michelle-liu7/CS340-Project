@@ -1,0 +1,28 @@
+<a href="/">Home</a>
+<h1 class="title">Add/Remove Publishers</h1>
+<div id="update_add_block">
+    <a href="/insertQueries/add_publisher" id="add_publisher">Add</a>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Publishers</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <!--getPublishers function in publishers.js-->
+        {{#each publishers}}
+        <tr>
+            <td>{{name}}</td>
+            <td><button class="delete_butt" onclick="deletePublisher({{id}})">Delete</button></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<!--
+    need an object with {title:"Add/Remove Publishers", jsscripts:["deletePublisher.js"]} to render publishers.handlebars
+-->

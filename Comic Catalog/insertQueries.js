@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../database/dbcon.js');
+const db = require('./dbcon.js');
 
 //ADD GENRE
 router.post('/add_genre.html', (req, res) => {

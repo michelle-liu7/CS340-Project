@@ -1,43 +1,40 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../database/dbcon.js');
+const db = require('./dbcon.js');
 
-//GET GENRE
+//GET AUTHOR
 router.get('/', (req, res) => {
   db.getConnection(function(err, connection){
-    sql = "SELECT genreID, type FROM Genres";
+    sql = "SELECT authorID, fname, lname FROM Authors";
     connection.query(sql, function(err, rows){
-      if(err){
-        console.log(JSON.stringify(err));
-        res.write(JSON.stringify(err));
-      }
-      else{
-        res.status(200).json(rows);
-      }
+      res.status(200).json(rows);
     });
     connection.release();
   });
 });
 
-//DELTE GENRE
+// DELETE AUTHOR
 router.delete('/', (req, res) => {
   db.getConnection(function(err, connection){
-    sql = "DELETE FROM Books_Genres WHERE gid=?";
-    params = [req.body.genreID];
-    connection.query(sql, params, function(err, rows){
-      if(err){
-        console.log(JSON.stringify(err));
-        res.write(JSON.stringify(err));
-      }
-    });
-    sql = "DELETE FROM Genres WHERE genreID=?";
+    sql = "DELETE FROM Books_Authors WHERE aid=?";
+    params = [req.body.authorID];
     connection.query(sql, params, function(err, rows){
       if(err){
         console.log(JSON.stringify(err));
         res.write(JSON.stringify(err));
       }
       else{
-        res.status(200).json({message: "Success! Deleted genre"});
+        res.status(200);
+      }
+    });
+    sql = "DELETE FROM Authors WHERE authorID=?";
+    connection.query(sql, params, function(err, rows){
+      if(err){
+        console.log(JSON.stringify(err));
+        res.write(JSON.stringify(err));
+      }
+      else{
+        res.status(200).json({message: "Success! Deleted author"});
       }
     });
     connection.release();

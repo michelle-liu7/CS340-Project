@@ -103,6 +103,7 @@ module.exports = function(){
     });
   }
 
+  /*
   function getInventoryByGenre(req,res, mysql, context, complete){
     var sql = "SELECT b.bookID, b.title AS Title, b.issue AS Issue, " +
     "GROUP_CONCAT(DISTINCT CONCAT(a.fname, ' ', a.lname) ORDER BY a.fname SEPARATOR ', ') AS Author, " +
@@ -126,6 +127,7 @@ module.exports = function(){
       complete();
     });
   }
+  */
 
   // GET INVENTORY
   router.get('/', (req, res) => {
@@ -249,6 +251,7 @@ module.exports = function(){
 
   });
 
+  /*
   //FILTER BY GENRE
   router.get('/genre/:id', (req, res) => {
     var callbackCount = 0;
@@ -268,6 +271,6 @@ module.exports = function(){
     }
 
   });
-
+  */
   return router;
 }();

@@ -255,7 +255,7 @@ module.exports = function(){
     var context = {};
     context.jsscripts = ["filterByGenre.js", "deleteInventory.js"];
     context.title = "View Inventory";
-    var mysql = req.qpp.get('mysql');
+    var mysql = req.app.get('mysql');
     
     getInventoryByGenre(req,res, mysql, context, complete);
     getGenres(res, mysql, context, complete);

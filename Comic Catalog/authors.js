@@ -1,43 +1,42 @@
 const express = require('express');
 const router = express.Router();
-const db = require('./dbcon.js');
 
 //GET AUTHOR
-router.get('/', (req, res) => {
-  db.getConnection(function(err, connection){
-    sql = "SELECT authorID, fname, lname FROM Authors";
-    connection.query(sql, function(err, rows){
-      res.status(200).json(rows);
-    });
-    connection.release();
+router.get('/', function(req, res){
+  var mysql = req.app.get('mysql');
+  var sql = "SELECT authorID, fname, lname FROM Authors";
+  mysql.pool.query(sql, function(err, results){
+    if(err){
+      console.log(JSON.stringify(err));
+      res.write(JSON.stringify(err));
+      res.status(400).end();
+    }
+    res.status(202).end();
   });
 });
 
 // DELETE AUTHOR
-router.delete('/', (req, res) => {
-  db.getConnection(function(err, connection){
-    sql = "DELETE FROM Books_Authors WHERE aid=?";
-    params = [req.body.authorID];
-    connection.query(sql, params, function(err, rows){
-      if(err){
-        console.log(JSON.stringify(err));
-        res.write(JSON.stringify(err));
-      }
-      else{
-        res.status(200);
-      }
-    });
-    sql = "DELETE FROM Authors WHERE authorID=?";
-    connection.query(sql, params, function(err, rows){
-      if(err){
-        console.log(JSON.stringify(err));
-        res.write(JSON.stringify(err));
-      }
-      else{
-        res.status(200).json({message: "Success! Deleted author"});
-      }
-    });
-    connection.release();
+router.delete('/', function(req, res){
+  var mysql = req.app.get('mysql');
+  var sql = "DELETE FROM Books_Authors WHERE aid=?";
+  var inserts = [req.body.id];
+  mysql.pool.query(sql, inserts, function(err, results){
+    if(err){
+      console.log(JSON.stringify(err));
+      res.write(JSON.stringify(err));
+      res.status(400).end();
+    }
+  });
+  sql = "DELETE FROM Authors WHERE authorID=?";
+  mysql.pool.query(sql, inserts, function(err, results){
+    if(err){
+      console.log(JSON.stringify(err));
+      res.write(JSON.stringify(err));
+      res.status(400).end();
+    }
+    else{
+      res.status(202).end();
+    }
   });
 });
 

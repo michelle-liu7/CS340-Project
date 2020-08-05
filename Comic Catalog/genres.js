@@ -1,46 +1,44 @@
 const express = require('express');
 const router = express.Router();
-const db = require('./dbcon.js');
 
 //GET GENRE
-router.get('/', (req, res) => {
-  db.getConnection(function(err, connection){
-    sql = "SELECT genreID, type FROM Genres";
-    connection.query(sql, function(err, rows){
-      if(err){
-        console.log(JSON.stringify(err));
-        res.write(JSON.stringify(err));
-      }
-      else{
-        res.status(200).json(rows);
-      }
-    });
-    connection.release();
+router.get('/', function(req, res){
+  var mysql = req.app.get('mysql');
+  var sql = "SELECT genreID, type FROM Genres";
+  mysql.pool.query(sql, function(err, results){
+    if(err){
+      console.log(JSON.stringify(err));
+      res.write(JSON.stringify(err));
+      res.status(400).end();
+    }
+    else{
+      res.status(202).end();
+    }
   });
 });
 
 //DELTE GENRE
-router.delete('/', (req, res) => {
-  db.getConnection(function(err, connection){
-    sql = "DELETE FROM Books_Genres WHERE gid=?";
-    params = [req.body.genreID];
-    connection.query(sql, params, function(err, rows){
-      if(err){
-        console.log(JSON.stringify(err));
-        res.write(JSON.stringify(err));
-      }
-    });
-    sql = "DELETE FROM Genres WHERE genreID=?";
-    connection.query(sql, params, function(err, rows){
-      if(err){
-        console.log(JSON.stringify(err));
-        res.write(JSON.stringify(err));
-      }
-      else{
-        res.status(200).json({message: "Success! Deleted genre"});
-      }
-    });
-    connection.release();
+router.delete('/', function(req, res){
+  var mysql = req.app.get('mysql');
+  var sql = "DELETE FROM Books_Genres WHERE gid=?";
+  var inserts = [req.body.id];
+  mysql.pool.query(sql, inserts, function(err, results){
+    if(err){
+      console.log(JSON.stringify(err));
+      res.write(JSON.stringify(err));
+      res.status(400).end();
+    }
+  });
+  sql = "DELETE FROM Genres WHERE genreID=?";
+  mysql.pool.query(sql, inserts, function(err, results){
+    if(err){
+      console.log(JSON.stringify(err));
+      res.write(JSON.stringify(err));
+      res.status(400).end();
+    }
+    else{
+      res.status(202).end();
+    }
   });
 });
 

@@ -1,39 +1,36 @@
 const express = require('express');
 const router = express.Router();
-const db = require('./dbcon.js');
 
 //GET PUBLISHERS
-router.get('/', (req, res) => {
-  db.getConnection(function(err, connection){
-    sql = "SELECT pubID, name FROM Publishers";
-    connection.query(sql, function(err, rows){
-      if(err){
-        console.log(JSON.stringify(err));
-        res.write(JSON.stringify(err));
-      }
-      else{
-        res.status(200).json(rows);
-      }
-    });
-    connection.release();
+router.get('/', function(req, res){
+  var mysql = req.app.get('mysql');
+  var sql = "SELECT pubID, name FROM Publishers";
+  mysql.pool.query(sql, function(err, results){
+    if(err){
+      console.log(JSON.stringify(err));
+      res.write(JSON.stringify(err));
+      res.status(400).end();
+    }
+    else{
+      res.status(202).end();
+    }
   });
 });
 
 //DELTE PUBLISHER
-router.delete('/', (req, res) => {
-  db.getConnection(function(err, connection){
-    sql = "DELETE FROM Publishers WHERE pubID=?";
-    params = [req.body.pubID];
-    connection.query(sql, params, function(err, rows){
-      if(err){
-        console.log(JSON.stringify(err));
-        res.write(JSON.stringify(err));
-      }
-      else{
-        res.status(200).json({message: 'Success! Deleted publisher'});
-      }
-    });
-    connection.release();
+router.delete('/', function(req, res){
+  var mysql = req.app.get('mysql');
+  var sql = "DELETE FROM Publishers WHERE pubID=?";
+  var inserts = [req.body.id];
+  mysql.pool.query(sql, inserts, function(err, results){
+    if(err){
+      console.log(JSON.stringify(err));
+      res.write(JSON.stringify(err));
+      res.status(400).end();
+    }
+    else{
+      res.status(202).end();
+    }
   });
 });
 

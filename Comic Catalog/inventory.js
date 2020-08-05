@@ -99,26 +99,27 @@ module.exports = function(){
           res.end();
       }
       context.book = results[0];
-      console.log(typeof(context.book.genreIDs));
+      console.log(context.book.genreIDs, typeof(context.book.genreIDs));
       complete();
     });
   }
 
-  /*function getInventoryByGenre(req,res, mysql, context, complete){
-    var sql = "SELECT b.bookID, b.title AS Title, b.issue AS Issue, " +
-    "GROUP_CONCAT(DISTINCT CONCAT(a.fname, ' ', a.lname) ORDER BY a.fname SEPARATOR ', ') AS Author, " +
-    "p.name AS Publisher, GROUP_CONCAT(DISTINCT g.type ORDER BY g.type SEPARATOR ', ') AS Genres, " +
-    "b.price AS Price, b.upc AS UPC, CONCAT(c.fname, ' ', c.lname) AS Owner FROM Books b " +
-    "LEFT JOIN Books_Genres bg ON b.bookID = bg.bid " +
-    "JOIN Genres g ON bg.gid = g.genreID AND g.genreID = ?" +
+  function getInventoryByGenre(req,res, mysql, context, complete){
+    var sql = "SELECT b.bookID AS id, b.title AS title, b.issue AS issue, " +
+    "GROUP_CONCAT(DISTINCT CONCAT(a.fname, ' ', a.lname) ORDER BY a.fname SEPARATOR ', ') AS author, " +
+    "p.name AS publisher, GROUP_CONCAT(DISTINCT g.type ORDER BY g.type SEPARATOR ', ') AS genre, " +
+    "b.price AS price, b.upc AS upc, CONCAT(c.fname, ' ', c.lname) AS owner FROM Books b " +
     "LEFT JOIN Books_Authors ba ON b.bookID = ba.bid " +
     "LEFT JOIN Authors a ON ba.aid = a.authorID " +
     "LEFT JOIN Publishers p ON b.publisher = p.pubID " +
+    "LEFT JOIN Books_Genres bg ON b.bookID = bg.bid " +
+    "LEFT JOIN Genres g ON bg.gid = g.genreID " +
     "LEFT JOIN Collectors c ON b.owner = c.userID " +
+    "WHERE g.genreID = ?" +
     "GROUP BY b.upc ORDER BY b.title";
     var inserts = [req.params.id]
 
-    mysql.pool.query(query, inserts, function(error, results, fields){
+    mysql.pool.query(sql, inserts, function(error, results, fields){
       if(error){
           res.write(JSON.stringify(error));
           res.end();
@@ -126,7 +127,7 @@ module.exports = function(){
       context.books = results;
       complete();
     });
-  }*/
+  }
 
   // GET INVENTORY
   router.get('/', (req, res) => {
@@ -249,7 +250,7 @@ module.exports = function(){
 
   });
 
-/*  //FILTER BY GENRE
+  //FILTER BY GENRE
   router.get('/genre/:id', (req, res) => {
     var callbackCount = 0;
     var context = {};
@@ -267,7 +268,7 @@ module.exports = function(){
       }
     }
 
-  });*/
+  });
 
   return router;
 }();

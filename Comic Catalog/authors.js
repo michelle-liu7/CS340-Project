@@ -1,44 +1,66 @@
-const express = require('express');
-const router = express.Router();
-const db = require('./dbcon.js');
+module.exports = function(){
+  var express = require('express');
+  var router = express.Router();
 
-//GET AUTHOR
-router.get('/', (req, res) => {
-  db.getConnection(function(err, connection){
-    sql = "SELECT authorID, fname, lname FROM Authors";
-    connection.query(sql, function(err, rows){
-      res.status(200).json(rows);
-    });
-    connection.release();
+  //getAuthors function to get all authors
+  function getAuthors(res, mysql, context, complete){
+    
+    mysql.pool.query("SELECT authorID AS id, fname, lname FROM Authors", function(error, results, fields){
+        if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+        }
+        context.authors = results;
+        complete();
+    });  
+  }
+
+  // GET authors
+  router.get('/', (req, res) => {
+    var callbackCount = 0;
+    var context = {};
+    context.jsscripts = ["deleteAuthor.js"];
+    context.title = "View Authors";
+
+    var mysql = req.app.get('mysql');
+    getAuthors(res, mysql, context, complete);
+
+    function complete(){
+      callbackCount++;
+      if(callbackCount >= 1){
+          res.render('authors', context);
+      }
+    }
   });
-});
 
-// DELETE AUTHOR
-router.delete('/', (req, res) => {
-  db.getConnection(function(err, connection){
-    sql = "DELETE FROM Books_Authors WHERE aid=?";
-    params = [req.body.authorID];
-    connection.query(sql, params, function(err, rows){
-      if(err){
-        console.log(JSON.stringify(err));
-        res.write(JSON.stringify(err));
-      }
-      else{
-        res.status(200);
-      }
+  // DELETE an author
+  router.delete('/:id', (req, res) => {
+    var mysql = req.app.get('mysql');
+    var sql = "DELETE FROM Books_Authors WHERE aid=?";
+    var inserts = [req.params.id];
+
+    sql = mysql.pool.query(sql, inserts, function(error, results, fields){
+        if (error){
+          console.log(error);
+          res.write(JSON.stringify(error));
+          res.status(400);
+          res.end();
+        } 
     });
+
     sql = "DELETE FROM Authors WHERE authorID=?";
-    connection.query(sql, params, function(err, rows){
-      if(err){
-        console.log(JSON.stringify(err));
-        res.write(JSON.stringify(err));
-      }
-      else{
-        res.status(200).json({message: "Success! Deleted author"});
+    sql = mysql.pool.query(sql, inserts, function(error, results, fields){
+      if (error){
+        console.log(error);
+        res.write(JSON.stringify(error));
+        res.status(400);
+        res.end();
+      } else {
+        res.status(202).end();
       }
     });
-    connection.release();
-  });
-});
 
-module.exports = router;
+  });
+
+  return router;
+}();

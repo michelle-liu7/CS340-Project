@@ -1,40 +1,56 @@
-const express = require('express');
-const router = express.Router();
-const db = require('./dbcon.js');
+module.exports = function(){
+  var express = require('express');
+  var router = express.Router();
 
-//GET PUBLISHERS
-router.get('/', (req, res) => {
-  db.getConnection(function(err, connection){
-    sql = "SELECT pubID, name FROM Publishers";
-    connection.query(sql, function(err, rows){
-      if(err){
-        console.log(JSON.stringify(err));
-        res.write(JSON.stringify(err));
+  //getPublishers function to get all publishers
+  function getPublishers(res, mysql, context, complete){
+    
+    mysql.pool.query("SELECT pubID AS id, name FROM Publishers", function(error, results, fields){
+        if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+        }
+        context.publishers = results;
+        complete();
+    });  
+  }
+
+  // GET publishers
+  router.get('/', (req, res) => {
+    var callbackCount = 0;
+    var context = {};
+    context.jsscripts = ["deletePublisher.js"];
+    context.title = "View Publishers";
+
+    var mysql = req.app.get('mysql');
+    getPublishers(res, mysql, context, complete);
+
+    function complete(){
+      callbackCount++;
+      if(callbackCount >= 1){
+          res.render('publishers', context);
       }
-      else{
-        res.status(200).json(rows);
-      }
-    });
-    connection.release();
+    }
   });
-});
 
-//DELTE PUBLISHER
-router.delete('/', (req, res) => {
-  db.getConnection(function(err, connection){
-    sql = "DELETE FROM Publishers WHERE pubID=?";
-    params = [req.body.pubID];
-    connection.query(sql, params, function(err, rows){
-      if(err){
-        console.log(JSON.stringify(err));
-        res.write(JSON.stringify(err));
-      }
-      else{
-        res.status(200).json({message: 'Success! Deleted publisher'});
-      }
+  // DELETE a publisher
+  router.delete('/:id', (req, res) => {
+    var mysql = req.app.get('mysql');
+    var sql = "DELETE FROM Publishers WHERE pubID=?";
+    var inserts = [req.params.id];
+
+    sql = mysql.pool.query(sql, inserts, function(error, results, fields){
+        if (error){
+          console.log(error);
+          res.write(JSON.stringify(error));
+          res.status(400);
+          res.end();
+        } else {
+          res.status(202).end();
+        }
     });
-    connection.release();
-  });
-});
 
-module.exports = router;
+  });
+
+  return router;
+}();

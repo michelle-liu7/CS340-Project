@@ -8,7 +8,7 @@
 <div id="search_bar">
     Search Books
     <form id="filter_by_genre">
-        <select name="genre_filter">
+        <select id="genre_filter" name="genre_filter">
             <!--need a getGenre function in inventory.js-->
             {{#each genres}}
             <option value="{{id}}">{{type}}</option>

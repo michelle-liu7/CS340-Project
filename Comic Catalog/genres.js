@@ -1,47 +1,56 @@
-const express = require('express');
-const router = express.Router();
-const db = require('./dbcon.js');
+module.exports = function(){
+  var express = require('express');
+  var router = express.Router();
 
-//GET GENRE
-router.get('/', (req, res) => {
-  db.getConnection(function(err, connection){
-    sql = "SELECT genreID, type FROM Genres";
-    connection.query(sql, function(err, rows){
-      if(err){
-        console.log(JSON.stringify(err));
-        res.write(JSON.stringify(err));
+  //getGenres function to get all publishers
+  function getGenres(res, mysql, context, complete){
+    
+    mysql.pool.query("SELECT genreID AS id, type FROM Genres", function(error, results, fields){
+        if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+        }
+        context.genres = results;
+        complete();
+    });  
+  }
+
+  // GET genres
+  router.get('/', (req, res) => {
+    var callbackCount = 0;
+    var context = {};
+    context.jsscripts = ["deleteGenre.js"];
+    context.title = "View Genres";
+
+    var mysql = req.app.get('mysql');
+    getGenres(res, mysql, context, complete);
+
+    function complete(){
+      callbackCount++;
+      if(callbackCount >= 1){
+          res.render('genres', context);
       }
-      else{
-        res.status(200).json(rows);
-      }
-    });
-    connection.release();
+    }
   });
-});
 
-//DELTE GENRE
-router.delete('/', (req, res) => {
-  db.getConnection(function(err, connection){
-    sql = "DELETE FROM Books_Genres WHERE gid=?";
-    params = [req.body.genreID];
-    connection.query(sql, params, function(err, rows){
-      if(err){
-        console.log(JSON.stringify(err));
-        res.write(JSON.stringify(err));
-      }
+  // DELETE a genre
+  router.delete('/:id', (req, res) => {
+    var mysql = req.app.get('mysql');
+    var sql = "DELETE FROM Genres WHERE genreID=?";
+    var inserts = [req.params.id];
+
+    sql = mysql.pool.query(sql, inserts, function(error, results, fields){
+        if (error){
+          console.log(error);
+          res.write(JSON.stringify(error));
+          res.status(400);
+          res.end();
+        } else {
+          res.status(202).end();
+        }
     });
-    sql = "DELETE FROM Genres WHERE genreID=?";
-    connection.query(sql, params, function(err, rows){
-      if(err){
-        console.log(JSON.stringify(err));
-        res.write(JSON.stringify(err));
-      }
-      else{
-        res.status(200).json({message: "Success! Deleted genre"});
-      }
-    });
-    connection.release();
+
   });
-});
 
-module.exports = router;
+  return router;
+}();

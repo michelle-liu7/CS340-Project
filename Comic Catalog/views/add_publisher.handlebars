@@ -3,7 +3,7 @@
 
 <div class="add_new_item">
     <form action="/insertQueries/add_publisher" method="post">
-        <label>Publisher: <input type="text" name="name"></label>
+        <label>Publisher: <input type="text" name="name" required></label>
         <br>
         <br>
         <input type="submit" value="Add" />
@@ -12,10 +12,3 @@
     <button onclick="window.history.back()">Cancel</button>
 </div>
 
-<!--
-    In insertQueries.js, add:
-
-    app.get('/add_publisher', function(req, res, next){
-        res.render('add_publisher', {title:'Add Publishers'});
-    });
--->

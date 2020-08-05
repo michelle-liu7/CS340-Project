@@ -52,7 +52,10 @@
     <br>
     <br>
 </form>
-<button onclick="updateBook({{book.id}})">Update</button>
+<button>Update</button>
+<!--
+    <button onclick="updateBook({{book.id}})">Update</button>
+-->
 <script defer>selectPublisher({{book.publisherID}});</script>
 <script defer>selectOwner({{book.ownerID}});</script>
 <!--if there are multiple authors/genres, separate the IDs by comma. EX: 4,9 

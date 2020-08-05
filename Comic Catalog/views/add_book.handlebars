@@ -2,22 +2,22 @@
 <h1 class="title">Add Books</h1>
 <div class="add_new_item">
     <form action="/insertQueries/add_book" method="post">
-        <label>Title: <input type="text" name="title"></label>
+        <label>Title: <input type="text" name="title" required></label>
         <br>
         <br>
-        <label>Issue #: <input type="text" name="issue"></label>
+        <label>Issue #: <input type="text" name="issue" required></label>
         <br>
         <br>
-        <label>UPC: <input type="text" name="upc"></label>
+        <label>UPC: <input type="text" name="upc" required></label>
         <br>
         <br>
-        <label>Price: <input type="text" name="price"></label>
+        <label>Price: <input type="text" name="price" required></label>
         <br>
         <br>
         <label>
             Owner:
-            <Select name="owner">
-                {{#each collectors}}
+            <Select name="owner" required>
+                {{#each owners}}
                 <!--need a getOwners function in insertQueries.js to get a list of owner ids and full names-->
                 <option value="{{id}}">{{fullName}}</option>
                 {{/each}}
@@ -26,8 +26,8 @@
         <br>
         <br>
         <label>
-            Publishers:
-            <Select name="publisher">
+            Publisher:
+            <Select name="publisher" required>
                 {{#each publishers}}
                 <!--need a getPublishers function in insertQueries.js to get a list of publisher ids and names-->
                 <option value="{{id}}">{{name}}</option>
@@ -38,7 +38,7 @@
         <br>
         <label>
             Authors:
-            <Select name="authors" multiple size="4">
+            <Select name="authors" multiple size="4" required>
                 {{#each authors}}
                 <!--need a getAuthors function in insertQueries.js-->
                 <option value="{{id}}">{{fullName}}</option>
@@ -49,7 +49,7 @@
         <br>
         <label>
             Genres:
-            <Select name="genres" multiple size="4">
+            <Select name="genres" multiple size="4" required>
                 {{#each genres}}
                 <!--need a getGenres function in insertQueries.js-->
                 <option value="{{id}}">{{type}}</option>
@@ -63,11 +63,3 @@
     <br>
     <button onclick="window.history.back()">Cancel</button>
 </div>
-
-<!--
-    In insertQueries.js, add:
-
-    app.get('/add_book', function(req, res, next){
-        res.render('add_book', {title:'Add a book'});
-    });
--->

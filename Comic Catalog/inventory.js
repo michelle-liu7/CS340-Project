@@ -99,12 +99,12 @@ module.exports = function(){
           res.end();
       }
       context.book = results[0];
+      console.log(typeof(context.book.genreIDs));
       complete();
     });
   }
 
-  /*
-  function getInventoryByGenre(req,res, mysql, context, complete){
+  /*function getInventoryByGenre(req,res, mysql, context, complete){
     var sql = "SELECT b.bookID, b.title AS Title, b.issue AS Issue, " +
     "GROUP_CONCAT(DISTINCT CONCAT(a.fname, ' ', a.lname) ORDER BY a.fname SEPARATOR ', ') AS Author, " +
     "p.name AS Publisher, GROUP_CONCAT(DISTINCT g.type ORDER BY g.type SEPARATOR ', ') AS Genres, " +
@@ -126,8 +126,7 @@ module.exports = function(){
       context.books = results;
       complete();
     });
-  }
-  */
+  }*/
 
   // GET INVENTORY
   router.get('/', (req, res) => {
@@ -210,7 +209,6 @@ module.exports = function(){
   });
 
   // update a book
-  // CANNOT UPDATE A BOOK
   router.put('/:id', function(req, res){
     var mysql = req.app.get('mysql');
     console.log(req.body)
@@ -251,8 +249,7 @@ module.exports = function(){
 
   });
 
-  /*
-  //FILTER BY GENRE
+/*  //FILTER BY GENRE
   router.get('/genre/:id', (req, res) => {
     var callbackCount = 0;
     var context = {};
@@ -270,7 +267,7 @@ module.exports = function(){
       }
     }
 
-  });
-  */
+  });*/
+
   return router;
 }();

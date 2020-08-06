@@ -1,0 +1,21 @@
+<a href="/">Home</a>
+<h1 class="title">Add Genres</h1>
+
+<div class="add_new_item">
+    <form action="/insertQueries/add_genre" method="post">
+        <label>Genre: <input type="text" name="type" required></label>
+        <br>
+        <br>
+        <input type="submit" value="Add" />
+    </form>
+    <br>
+    <button onclick="window.history.back()">Cancel</button>
+</div>
+
+<!--
+    In insertQueries.js, add:
+
+    app.get('/add_genre', function(req, res, next){
+        res.render('add_genre', {title:'Add Genres'});
+    });
+-->

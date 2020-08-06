@@ -1,0 +1,58 @@
+<a href="/">Home</a>
+<h1 class="title">Inventory</h1>
+<div id="update_add_block">
+    <a href="/insertQueries/add_book" id="add_book_butt">Add</a>
+</div>
+
+<!--populate filter option from database-->
+<div id="search_bar">
+    Search Books
+    <form id="filter_by_genre">
+        <select id="genre_filter" name="genre_filter">
+            <!--need a getGenre function in inventory.js-->
+            {{#each genres}}
+            <option value="{{id}}">{{type}}</option>
+            {{/each}}
+        </select>
+        <input type="button" value="Filter" onclick="filterByGenre()">
+    </form>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Issue</th>
+            <th>Author Name</th>
+            <th>Publisher</th>
+            <th>Genres</th>
+            <th>Price</th>
+            <th>UPC</th>
+            <th>Owner</th>
+            <th>Delete</th>
+            <th>Update</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {{#each books}}
+        <tr>
+            <td>{{title}}</td>
+            <td>{{issue}}</td>
+            <td>{{author}}</td>
+            <td>{{publisher}}</td>
+            <td>{{genre}}</td>
+            <td>{{price}}</td>
+            <td>{{upc}}</td>
+            <td>{{owner}}</td>
+            <td><button class="delete_butt" onclick="deleteInventory({{id}})">Delete</button></td>
+            <!--need a get router for update_book-->
+            <td><a href="/inventory/{{id}}" class="update_butt">Update</a></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<!--
+    need an object with {title:"Inventory", jsscripts:["filterByGenre.js", "deleteInventory.js"]} to render inventory.handlebars
+-->

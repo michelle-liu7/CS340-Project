@@ -1,11 +1,11 @@
 module.exports = function(){
   var express = require('express');
   var router = express.Router();
-
+  
 
   //getGenres function to get all genres
   function getGenres(res, mysql, context, complete){
-
+    
     mysql.pool.query("SELECT genreID AS id, type FROM Genres", function(error, results, fields){
         if(error){
           res.write(JSON.stringify(error));
@@ -13,12 +13,12 @@ module.exports = function(){
         }
         context.genres = results;
         complete();
-    });
+    });  
   }
 
   //getAuthors function to get all authors
   function getAuthors(res, mysql, context, complete){
-
+    
     mysql.pool.query("SELECT authorID AS id, CONCAT(fname, ' ', lname) AS fullName FROM Authors", function(error, results, fields){
         if(error){
           res.write(JSON.stringify(error));
@@ -26,12 +26,12 @@ module.exports = function(){
         }
         context.authors = results;
         complete();
-    });
+    });  
   }
 
   //getPublishers function to get all publishers
   function getPublishers(res, mysql, context, complete){
-
+    
     mysql.pool.query("SELECT pubID AS id, name FROM Publishers", function(error, results, fields){
         if(error){
           res.write(JSON.stringify(error));
@@ -39,12 +39,12 @@ module.exports = function(){
         }
         context.publishers = results;
         complete();
-    });
+    });  
   }
 
   //getOwners function to get all owners
   function getOwners(res, mysql, context, complete){
-
+    
     mysql.pool.query("SELECT userID AS id, CONCAT(fname, ' ', lname) AS fullName FROM Collectors", function(error, results, fields){
         if(error){
           res.write(JSON.stringify(error));
@@ -52,7 +52,7 @@ module.exports = function(){
         }
         context.owners = results;
         complete();
-    });
+    });  
   }
 
   // function to insert into the Books_Authors table when adding a book
@@ -89,13 +89,14 @@ module.exports = function(){
     }
   }
 
+
   //render add_book page
   router.get('/add_book', function(req, res){
     var callbackCount = 0;
     var context = {};
     var mysql = req.app.get('mysql');
     context.title = "Add a book";
-
+    
     getGenres(res, mysql, context, complete);
     getPublishers(res, mysql, context, complete);
     getAuthors(res, mysql, context, complete);
@@ -121,7 +122,7 @@ module.exports = function(){
         res.write(JSON.stringify(error));
         res.status(400);
         res.end();
-      }
+      } 
     });
 
     sql = "SELECT bookID FROM Books WHERE upc=?";
@@ -140,6 +141,7 @@ module.exports = function(){
         res.redirect('/inventory');
       }
     });
+    
   });
 
   //render add_author page
@@ -202,11 +204,11 @@ module.exports = function(){
   router.get('/add_genre', function(req, res){
     var context = {};
     context.title = "Add a genre";
-
+  
     res.render('add_genre', context);
-
+  
   });
-
+  
   //add a genre to database
   router.post('/add_genre', (req, res) =>{
     var mysql = req.app.get('mysql');
@@ -223,18 +225,18 @@ module.exports = function(){
         res.redirect('/genres');
       }
     });
-
+  
   });
 
   //render add_collector page
   router.get('/add_collector', function(req, res){
     var context = {};
     context.title = "Add a collector";
-
+  
     res.render('add_collector', context);
-
+  
   });
-
+  
   //add a collector to database
   router.post('/add_collector', (req, res) =>{
     var mysql = req.app.get('mysql');
@@ -254,7 +256,7 @@ module.exports = function(){
 
   });
 
-
+      
 
   return router;
 }();

@@ -1,7 +1,7 @@
 module.exports = function(){
   var express = require('express');
   var router = express.Router();
-
+  
   //getBooks function to return all books
   function getBooks(res, mysql, context, complete){
     var sql = "SELECT b.bookID AS id, b.title AS title, b.issue AS issue, " +
@@ -23,12 +23,12 @@ module.exports = function(){
         }
         context.books = results;
         complete();
-    });
+    });  
   }
 
   //getGenres function to get all genres
   function getGenres(res, mysql, context, complete){
-
+    
     mysql.pool.query("SELECT genreID AS id, type FROM Genres", function(error, results, fields){
         if(error){
           res.write(JSON.stringify(error));
@@ -36,12 +36,12 @@ module.exports = function(){
         }
         context.genres = results;
         complete();
-    });
+    });  
   }
 
   //getAuthors function to get all authors
   function getAuthors(res, mysql, context, complete){
-
+    
     mysql.pool.query("SELECT authorID AS id, CONCAT(fname, ' ', lname) AS fullName FROM Authors", function(error, results, fields){
         if(error){
           res.write(JSON.stringify(error));
@@ -49,12 +49,12 @@ module.exports = function(){
         }
         context.authors = results;
         complete();
-    });
+    });  
   }
 
   //getPublishers function to get all publishers
   function getPublishers(res, mysql, context, complete){
-
+    
     mysql.pool.query("SELECT pubID AS id, name FROM Publishers", function(error, results, fields){
         if(error){
           res.write(JSON.stringify(error));
@@ -62,12 +62,12 @@ module.exports = function(){
         }
         context.publishers = results;
         complete();
-    });
+    });  
   }
 
   //getOwners function to get all owners
   function getOwners(res, mysql, context, complete){
-
+    
     mysql.pool.query("SELECT userID AS id, CONCAT(fname, ' ', lname) AS fullName FROM Collectors", function(error, results, fields){
         if(error){
           res.write(JSON.stringify(error));
@@ -75,7 +75,7 @@ module.exports = function(){
         }
         context.owners = results;
         complete();
-    });
+    });  
   }
 
   //getBook function to return info about a specific book
@@ -99,9 +99,42 @@ module.exports = function(){
           res.end();
       }
       context.book = results[0];
-      console.log(context.book.genreIDs, typeof(context.book.genreIDs));
       complete();
     });
+  }
+
+  //get authorIDs for update
+  function getAuthorIDsForUpdate(res, mysql, context, id,complete){
+    var sql = "SELECT aid FROM `Books_Authors` WHERE bid = ?";
+    var inserts = [id]
+
+    mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+      context.AIds = results;
+      console.log(context.AIds);
+      complete();
+    });
+
+  }
+
+  //get genreIDs for update
+  function getGenreIDsForUpdate(res, mysql, context, id,complete){
+    var sql = "SELECT gid FROM `Books_Genres` WHERE bid = ?";
+    var inserts = [id]
+
+    mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+      context.GIds = results;
+      console.log(context.GIds);
+      complete();
+    });
+
   }
 
   function getInventoryByGenre(req,res, mysql, context, complete){
@@ -200,7 +233,6 @@ module.exports = function(){
     }
   }
 
-
   // GET INVENTORY
   router.get('/', (req, res) => {
     var callbackCount = 0;
@@ -232,7 +264,7 @@ module.exports = function(){
           res.write(JSON.stringify(error));
           res.status(400);
           res.end();
-        }
+        } 
     });
 
     sql = "DELETE FROM Books_Genres WHERE bid=?";
@@ -242,7 +274,7 @@ module.exports = function(){
         res.write(JSON.stringify(error));
         res.status(400);
         res.end();
-      }
+      } 
     });
 
     sql = "DELETE FROM Books WHERE bookID=?";
@@ -270,12 +302,14 @@ module.exports = function(){
     getGenres(res, mysql, context, complete);
     getPublishers(res, mysql, context, complete);
     getAuthors(res, mysql, context, complete);
-    getOwners(res, mysql, context, complete)
+    getOwners(res, mysql, context, complete);
+    getAuthorIDsForUpdate(res, mysql, context, req.params.id,complete);
+    getGenreIDsForUpdate(res, mysql, context, req.params.id,complete);
 
     function complete(){
         callbackCount++;
-        if(callbackCount >= 5){
-            res.render('update_book', context);
+        if(callbackCount >= 7){
+          res.render('update_book', context);
         }
 
     }
@@ -299,7 +333,7 @@ module.exports = function(){
     context.jsscripts = ["filterByGenre.js", "deleteInventory.js"];
     context.title = "View Inventory";
     var mysql = req.app.get('mysql');
-
+    
     getInventoryByGenre(req,res, mysql, context, complete);
     getGenres(res, mysql, context, complete);
 

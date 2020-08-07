@@ -1,7 +1,7 @@
 module.exports = function(){
   var express = require('express');
   var router = express.Router();
-  
+
   //getBooks function to return all books
   function getBooks(res, mysql, context, complete){
     var sql = "SELECT b.bookID AS id, b.title AS title, b.issue AS issue, " +
@@ -23,12 +23,12 @@ module.exports = function(){
         }
         context.books = results;
         complete();
-    });  
+    });
   }
 
   //getGenres function to get all genres
   function getGenres(res, mysql, context, complete){
-    
+
     mysql.pool.query("SELECT genreID AS id, type FROM Genres", function(error, results, fields){
         if(error){
           res.write(JSON.stringify(error));
@@ -36,12 +36,12 @@ module.exports = function(){
         }
         context.genres = results;
         complete();
-    });  
+    });
   }
 
   //getAuthors function to get all authors
   function getAuthors(res, mysql, context, complete){
-    
+
     mysql.pool.query("SELECT authorID AS id, CONCAT(fname, ' ', lname) AS fullName FROM Authors", function(error, results, fields){
         if(error){
           res.write(JSON.stringify(error));
@@ -49,12 +49,12 @@ module.exports = function(){
         }
         context.authors = results;
         complete();
-    });  
+    });
   }
 
   //getPublishers function to get all publishers
   function getPublishers(res, mysql, context, complete){
-    
+
     mysql.pool.query("SELECT pubID AS id, name FROM Publishers", function(error, results, fields){
         if(error){
           res.write(JSON.stringify(error));
@@ -62,12 +62,12 @@ module.exports = function(){
         }
         context.publishers = results;
         complete();
-    });  
+    });
   }
 
   //getOwners function to get all owners
   function getOwners(res, mysql, context, complete){
-    
+
     mysql.pool.query("SELECT userID AS id, CONCAT(fname, ' ', lname) AS fullName FROM Collectors", function(error, results, fields){
         if(error){
           res.write(JSON.stringify(error));
@@ -75,7 +75,7 @@ module.exports = function(){
         }
         context.owners = results;
         complete();
-    });  
+    });
   }
 
   //getBook function to return info about a specific book
@@ -129,6 +129,78 @@ module.exports = function(){
     });
   }
 
+  //update all of the fields that aren't M:M relationships
+  function updateBook(req, res, mysql){
+    var sql = "UPDATE Books SET title=?, issue=?, upc=?, publisher=?, price=?, owner=? WHERE bookID=?";
+    var inserts = [req.body.title, req.body.issue, req.body.upc, req.body.publisher, req.body.price, req.body.owner, req.params.id];
+    console.log(inserts)
+    sql = mysql.pool.query(sql,inserts,function(error, results, fields){
+      if(error){
+        console.log(error);
+        res.write(JSON.stringify(error));
+        res.status(400);
+        res.end();
+      }
+    });
+  }
+
+  //update the Books_Authors table
+  function updateBooksAuthors(req, res, mysql){
+    var sql = "DELETE FROM Books_Authors WHERE bid=?";
+    var inserts = [req.params.id];
+    mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+        console.log(error);
+        res.write(JSON.stringify(error));
+        res.status(400);
+        res.end();
+      }
+    });
+    sql = "INSERT INTO Books_Authors (bid, aid) VALUES (?,?)";
+    var authors = req.body.authors;
+    var x;
+    for(x=0; x<authors.length; x++){
+      inserts = [req.params.id, authors[x]];
+      mysql.pool.query(sql, inserts, function(error, results, fields){
+        if(error){
+          console.log(error);
+          res.write(JSON.stringify(error));
+          res.status(400);
+          res.end();
+        }
+      });
+    }
+  }
+
+  //update the Books_Genres table
+  function updateBooksGenres(req, res, mysql){
+    var sql = "DELETE FROM Books_Genres WHERE bid=?";
+    var inserts = [req.params.id];
+    mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+        console.log(error);
+        res.write(JSON.stringify(error));
+        res.status(400);
+        res.end();
+      }
+    });
+    sql = "INSERT INTO Books_Genres (bid, gid) VALUES (?,?)";
+    var genres = req.body.genres;
+    var x;
+    for(x=0; x<genres.length; x++){
+      inserts = [req.params.id, genres[x]];
+      mysql.pool.query(sql, inserts, function(error, results, fields){
+        if(error){
+          console.log(error);
+          res.write(JSON.stringify(error));
+          res.status(400);
+          res.end();
+        }
+      });
+    }
+  }
+
+
   // GET INVENTORY
   router.get('/', (req, res) => {
     var callbackCount = 0;
@@ -160,7 +232,7 @@ module.exports = function(){
           res.write(JSON.stringify(error));
           res.status(400);
           res.end();
-        } 
+        }
     });
 
     sql = "DELETE FROM Books_Genres WHERE bid=?";
@@ -170,7 +242,7 @@ module.exports = function(){
         res.write(JSON.stringify(error));
         res.status(400);
         res.end();
-      } 
+      }
     });
 
     sql = "DELETE FROM Books WHERE bookID=?";
@@ -214,40 +286,10 @@ module.exports = function(){
     var mysql = req.app.get('mysql');
     console.log(req.body)
     console.log(req.params.id)
-    var sql = "UPDATE Books SET title=?, issue=?, upc=?, publisher=?, price=?, owner=? WHERE bookID=?";
-    var inserts = [req.body.title, req.body.issue, req.body.upc, req.body.publisher, req.body.price, req.body.owner, req.params.id];
-    console.log(inserts)
-    sql = mysql.pool.query(sql,inserts,function(error, results, fields){
-      if(error){
-        console.log(error)
-        res.write(JSON.stringify(error));
-        res.end();
-      }
-    });
-
-    sql = "UPDATE Books_Authors SET aid=? WHERE bid=?";
-    inserts = [req.body.authors, req.params.id];
-    sql = mysql.pool.query(sql,inserts,function(error, results, fields){
-      if(error){
-        console.log(error)
-        res.write(JSON.stringify(error));
-        res.end();
-      }
-    });
-
-    sql = "UPDATE Books_Genres SET gid=? WHERE bid=?";
-    inserts = [req.body.genres, req.params.id];
-    sql = mysql.pool.query(sql,inserts,function(error, results, fields){
-      if(error){
-        console.log(error)
-        res.write(JSON.stringify(error));
-        res.end();
-      } else{
-        res.status(200);
-        res.end();
-      }
-    });
-
+    updateBook(req, res, mysql);
+    updateBooksAuthors(req, res, mysql);
+    updateBooksGenres(req, res, mysql);
+    res.status(202).end();
   });
 
   //FILTER BY GENRE
@@ -257,7 +299,7 @@ module.exports = function(){
     context.jsscripts = ["filterByGenre.js", "deleteInventory.js"];
     context.title = "View Inventory";
     var mysql = req.app.get('mysql');
-    
+
     getInventoryByGenre(req,res, mysql, context, complete);
     getGenres(res, mysql, context, complete);
 

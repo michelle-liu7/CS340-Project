@@ -1,5 +1,9 @@
-function selectGenres(id) {
-   console.log(typeof(id), id);
-   //var idArray = id.split(",");
-   $("#genre_selector").val(id);
+var gid_list = [];
+
+function genreIdList(id){
+   gid_list.push(id);
+}
+
+function selectGenres() {
+   $("#genre_selector").val(gid_list);
 }

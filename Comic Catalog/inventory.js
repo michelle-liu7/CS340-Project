@@ -99,9 +99,42 @@ module.exports = function(){
           res.end();
       }
       context.book = results[0];
-      console.log(context.book.genreIDs, typeof(context.book.genreIDs));
       complete();
     });
+  }
+
+  //get authorIDs for update
+  function getAuthorIDsForUpdate(res, mysql, context, id,complete){
+    var sql = "SELECT aid FROM `Books_Authors` WHERE bid = ?";
+    var inserts = [id]
+
+    mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+      context.AIds = results;
+      console.log(context.AIds);
+      complete();
+    });
+
+  }
+
+  //get genreIDs for update
+  function getGenreIDsForUpdate(res, mysql, context, id,complete){
+    var sql = "SELECT gid FROM `Books_Genres` WHERE bid = ?";
+    var inserts = [id]
+
+    mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+      context.GIds = results;
+      console.log(context.GIds);
+      complete();
+    });
+
   }
 
   function getInventoryByGenre(req,res, mysql, context, complete){
@@ -208,7 +241,6 @@ module.exports = function(){
     });
   }
 
-
   // GET INVENTORY
   router.get('/', (req, res) => {
     var callbackCount = 0;
@@ -279,12 +311,14 @@ module.exports = function(){
     getGenres(res, mysql, context, complete);
     getPublishers(res, mysql, context, complete);
     getAuthors(res, mysql, context, complete);
-    getOwners(res, mysql, context, complete)
+    getOwners(res, mysql, context, complete);
+    getAuthorIDsForUpdate(res, mysql, context, req.params.id,complete);
+    getGenreIDsForUpdate(res, mysql, context, req.params.id,complete);
 
     function complete(){
         callbackCount++;
-        if(callbackCount >= 5){
-            res.render('update_book', context);
+        if(callbackCount >= 7){
+          res.render('update_book', context);
         }
 
     }

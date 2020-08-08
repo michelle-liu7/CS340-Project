@@ -1,6 +1,9 @@
-function selectAuthors(id) {
-   //console.log(typeof(id), id);
-   //var idArray = id.split(",");
-   //console.log(idArray);
-   $("#author_selector").val(id);
+var aid_list = [];
+
+function authorIdList(id){
+   aid_list.push(id);
+}
+
+function selectAuthors() {
+   $("#author_selector").val(aid_list);
 }

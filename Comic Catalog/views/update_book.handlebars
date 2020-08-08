@@ -30,7 +30,7 @@
 
     <label>
         Authors:
-        <Select name="authors[]" multiple size="4" id="author_selector">
+        <Select name="authors" multiple size="4" id="author_selector">
             <!--need getAuthors function in inventory.js-->
             {{#each authors}}
             <option value="{{id}}">{{fullName}}</option>
@@ -41,7 +41,7 @@
 
     <label>
         Genres:
-        <Select name="genres[]" multiple size="4" id="genre_selector">
+        <Select name="genres" multiple size="4" id="genre_selector">
             <!--need a getGenres function-->
             {{#each genres}}
             <option value="{{id}}">{{type}}</option>
@@ -52,19 +52,17 @@
     <br>
     <br>
 </form>
-<button>Update</button>
-<!--
-    <button onclick="updateBook({{book.id}})">Update</button>
--->
+
+
+<button onclick="updateBook({{book.id}})">Update</button>
+
 <script defer>selectPublisher({{book.publisherID}});</script>
 <script defer>selectOwner({{book.ownerID}});</script>
-<!--if there are multiple authors/genres, separate the IDs by comma. EX: 4,9 
-    ONLY ONE value selected
--->
-<script defer>selectAuthors({{book.authorIDs}});</script>
-<script defer>selectGenres({{book.genreIDs}});</script>
-
-
-<!--
-    need an object with {title:"Update a book", jsscripts:["selectedGenres.js", "selectedAuthors.js", "selectedPublisher.js", "updateBook.js"]} to render inventory.handlebars
--->
+{{#each AIds}}
+<script defer>authorIdList({{aid}});</script>
+{{/each}}
+<script defer>selectAuthors();</script>
+{{#each GIds}}
+<script defer>genreIdList({{gid}});</script>
+{{/each}}
+<script defer>selectGenres();</script>

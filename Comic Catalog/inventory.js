@@ -141,6 +141,10 @@ module.exports = function(){
         res.status(400);
         res.end();
       }
+      else{
+        updateBooksGenres(req, res, mysql);
+        updateBooksAuthors(req, res, mysql);
+      }
     });
   }
 
@@ -155,21 +159,23 @@ module.exports = function(){
         res.status(400);
         res.end();
       }
-    });
-    sql = "INSERT INTO Books_Authors (bid, aid) VALUES (?,?)";
-    var authors = req.body.authors;
-    var x;
-    for(x=0; x<authors.length; x++){
-      inserts = [req.params.id, authors[x]];
-      mysql.pool.query(sql, inserts, function(error, results, fields){
-        if(error){
-          console.log(error);
-          res.write(JSON.stringify(error));
-          res.status(400);
-          res.end();
+      else{
+        sql = "INSERT INTO Books_Authors (bid, aid) VALUES (?,?)";
+        var authors = req.body.authors;
+        var x;
+        for(x=0; x<authors.length; x++){
+          inserts = [req.params.id, authors[x]];
+          mysql.pool.query(sql, inserts, function(error, results, fields){
+            if(error){
+              console.log(error);
+              res.write(JSON.stringify(error));
+              res.status(400);
+              res.end();
+            }
+          });
         }
-      });
-    }
+      }
+    });
   }
 
   //update the Books_Genres table
@@ -183,21 +189,23 @@ module.exports = function(){
         res.status(400);
         res.end();
       }
-    });
-    sql = "INSERT INTO Books_Genres (bid, gid) VALUES (?,?)";
-    var genres = req.body.genres;
-    var x;
-    for(x=0; x<genres.length; x++){
-      inserts = [req.params.id, genres[x]];
-      mysql.pool.query(sql, inserts, function(error, results, fields){
-        if(error){
-          console.log(error);
-          res.write(JSON.stringify(error));
-          res.status(400);
-          res.end();
+      else{
+        sql = "INSERT INTO Books_Genres (bid, gid) VALUES (?,?)";
+        var genres = req.body.genres;
+        var x;
+        for(x=0; x<genres.length; x++){
+          inserts = [req.params.id, genres[x]];
+          mysql.pool.query(sql, inserts, function(error, results, fields){
+            if(error){
+              console.log(error);
+              res.write(JSON.stringify(error));
+              res.status(400);
+              res.end();
+            }
+          });
         }
-      });
-    }
+      }
+    });
   }
 
 
@@ -233,30 +241,31 @@ module.exports = function(){
           res.status(400);
           res.end();
         }
+        else{
+          sql = "DELETE FROM Books_Genres WHERE bid=?";
+          sql = mysql.pool.query(sql, inserts, function(error, results, fields){
+            if (error){
+              console.log(error);
+              res.write(JSON.stringify(error));
+              res.status(400);
+              res.end();
+            }
+            else{
+              sql = "DELETE FROM Books WHERE bookID=?";
+              sql = mysql.pool.query(sql, inserts, function(error, results, fields){
+                if (error){
+                  console.log(error);
+                  res.write(JSON.stringify(error));
+                  res.status(400);
+                  res.end();
+                } else{
+                  res.status(202).end();
+                }
+              });
+            }
+          });
+        }
     });
-
-    sql = "DELETE FROM Books_Genres WHERE bid=?";
-    sql = mysql.pool.query(sql, inserts, function(error, results, fields){
-      if (error){
-        console.log(error);
-        res.write(JSON.stringify(error));
-        res.status(400);
-        res.end();
-      }
-    });
-
-    sql = "DELETE FROM Books WHERE bookID=?";
-    sql = mysql.pool.query(sql, inserts, function(error, results, fields){
-      if (error){
-        console.log(error);
-        res.write(JSON.stringify(error));
-        res.status(400);
-        res.end();
-      } else{
-        res.status(202).end();
-      }
-    });
-
   });
 
   // display the chosen book info on the update_book page
@@ -287,8 +296,6 @@ module.exports = function(){
     console.log(req.body)
     console.log(req.params.id)
     updateBook(req, res, mysql);
-    updateBooksAuthors(req, res, mysql);
-    updateBooksGenres(req, res, mysql);
     res.status(202).end();
   });
 

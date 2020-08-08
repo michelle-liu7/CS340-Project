@@ -122,22 +122,23 @@ module.exports = function(){
         res.status(400);
         res.end();
       }
-    });
-
-    sql = "SELECT bookID FROM Books WHERE upc=?";
-    inserts = [req.body.upc];
-    sql = mysql.pool.query(sql, inserts, function(error, results, fields){
-      if (error){
-        console.log(error);
-        res.write(JSON.stringify(error));
-        res.status(400);
-        res.end();
-      }else{
-        var id = [results[0].bookID];
-        insertBooksAuthors(req, res, id, mysql);
-        insertBooksGenres(req, res, id, mysql);
-        res.status(202);
-        res.redirect('/inventory');
+      else{
+        sql = "SELECT bookID FROM Books WHERE upc=?";
+        inserts = [req.body.upc];
+        sql = mysql.pool.query(sql, inserts, function(error, results, fields){
+          if (error){
+            console.log(error);
+            res.write(JSON.stringify(error));
+            res.status(400);
+            res.end();
+          }else{
+            var id = [results[0].bookID];
+            insertBooksAuthors(req, res, id, mysql);
+            insertBooksGenres(req, res, id, mysql);
+            res.status(202);
+            res.redirect('/inventory');
+          }
+        });
       }
     });
   });

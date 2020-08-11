@@ -266,7 +266,7 @@ module.exports = function(){
     var sql = "DELETE FROM Books_Authors WHERE bid=?";
     var inserts = [req.params.id];
 
-    sql = mysql.pool.query(sql, inserts, function(error, results, fields){
+    mysql.pool.query(sql, inserts, function(error, results, fields){
         if (error){
           console.log(error);
           res.write(JSON.stringify(error));
@@ -275,7 +275,7 @@ module.exports = function(){
         }
         else{
           sql = "DELETE FROM Books_Genres WHERE bid=?";
-          sql = mysql.pool.query(sql, inserts, function(error, results, fields){
+          mysql.pool.query(sql, inserts, function(error, results, fields){
             if (error){
               console.log(error);
               res.write(JSON.stringify(error));
@@ -284,7 +284,7 @@ module.exports = function(){
             }
             else{
               sql = "DELETE FROM Books WHERE bookID=?";
-              sql = mysql.pool.query(sql, inserts, function(error, results, fields){
+              mysql.pool.query(sql, inserts, function(error, results, fields){
                 if (error){
                   console.log(error);
                   res.write(JSON.stringify(error));

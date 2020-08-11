@@ -3,7 +3,7 @@
 
 <div class="add_new_item">
     <form action="/insertQueries/add_genre" method="post">
-        <label>Genre: <input type="text" name="type" required></label>
+        <label>Genre: <input type="text" name="type" pattern="[A-Z][A-Za-z]*" title="Please enter letters only and capitalize the first letter" required></label>
         <br>
         <br>
         <input type="submit" value="Add" />

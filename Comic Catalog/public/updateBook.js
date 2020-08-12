@@ -59,7 +59,7 @@ function updateBook(id){
             window.location.replace("./");
           },
           409: function(){
-            alert("A book with that UPC already exists in the database!\n\nPlease enter a different UPC");
+            alert("A book with that UPC already exists in the database!\nPlease enter a different UPC.");
           }
         }
     })

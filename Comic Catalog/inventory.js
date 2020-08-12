@@ -186,16 +186,28 @@ module.exports = function(){
         sql = "INSERT INTO Books_Authors (bid, aid) VALUES (?,?)";
         var authors = req.body.authors;
         var x;
-        for(x=0; x<authors.length; x++){
-          inserts = [req.params.id, authors[x]];
-          mysql.pool.query(sql, inserts, function(error, results, fields){
-            if(error){
-              console.log(error);
-              res.write(JSON.stringify(error));
-              res.status(400);
-              res.end();
+        if(!Array.isArray(authors)){
+          console.log("not array");
+          inserts = [req.params.id, authors];
+          mysql.pool.query(sql, inserts, function(err, rows){
+            if(err){
+              console.log(JSON.stringify(err));
+              res.write(JSON.stringify(err));
+              res.status(400).end();
             }
           });
+        }else{
+          for(x=0; x<authors.length; x++){
+            inserts = [req.params.id, authors[x]];
+            mysql.pool.query(sql, inserts, function(error, results, fields){
+              if(error){
+                console.log(error);
+                res.write(JSON.stringify(error));
+                res.status(400);
+                res.end();
+              }
+            });
+          }
         }
       }
     });
@@ -215,16 +227,28 @@ module.exports = function(){
         sql = "INSERT INTO Books_Genres (bid, gid) VALUES (?,?)";
         var genres = req.body.genres;
         var x;
-        for(x=0; x<genres.length; x++){
-          inserts = [req.params.id, genres[x]];
-          mysql.pool.query(sql, inserts, function(error, results, fields){
-            if(error){
-              console.log(error);
-              res.write(JSON.stringify(error));
-              res.status(400);
-              res.end();
+        if(!Array.isArray(genres)){
+          console.log("not array");
+          inserts = [req.params.id, genres];
+          mysql.pool.query(sql, inserts, function(err, rows){
+            if(err){
+              console.log(JSON.stringify(err));
+              res.write(JSON.stringify(err));
+              res.status(400).end();
             }
           });
+        }else{
+          for(x=0; x<genres.length; x++){
+            inserts = [req.params.id, genres[x]];
+            mysql.pool.query(sql, inserts, function(error, results, fields){
+              if(error){
+                console.log(error);
+                res.write(JSON.stringify(error));
+                res.status(400);
+                res.end();
+              }
+            });
+          }
         }
       }
     });

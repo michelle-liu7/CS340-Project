@@ -2,21 +2,21 @@
 <h1 class="title">Add Books</h1>
 <div class="add_new_item">
     <form id="add_book" action="/insertQueries/add_book" method="post">
-        <label>Title: <input type="text" name="title" pattern="[a-zA-Z0-9:\s]+" title="Please enter only letters, numbers, and ':'" required></label>
+        <label>Title: <input type="text" name="title" id="add_title" pattern="[a-zA-Z0-9:\s]+" title="Please enter only letters, numbers, and ':'" required></label>
         <br>
         <br>
-        <label>Issue #: <input type="text" name="issue" pattern="[0-9]{1,}" title="Please enter only numbers" required></label>
+        <label>Issue #: <input type="text" name="issue" id="add_issue" pattern="[0-9]{1,}" title="Please enter only numbers" required></label>
         <br>
         <br>
-        <label>UPC: <input type="text" name="upc" pattern="[0-9]{12,12}" title="Please enter a 12-digit code" required></label>
+        <label>UPC: <input type="text" name="upc" id="add_upc" pattern="[0-9]{12,12}" title="Please enter a 12-digit code" required></label>
         <br>
         <br>
-        <label>Price: <input type="text" name="price" pattern="[0-9]*[.]?[0-9]+" title="Please enter a price" required></label>
+        <label>Price: <input type="text" name="price" id="add_price" pattern="[0-9]*[.]?[0-9]+" title="Please enter a price" required></label>
         <br>
         <br>
         <label>
             Owner:
-            <Select name="owner" required>
+            <Select name="owner" id="add_owner" required>
                 {{#each owners}}
                 <!--need a getOwners function in insertQueries.js to get a list of owner ids and full names-->
                 <option value="{{id}}">{{fullName}}</option>
@@ -27,7 +27,7 @@
         <br>
         <label>
             Publisher:
-            <Select name="publisher" required>
+            <Select name="publisher" id="add_publisher" required>
                 {{#each publishers}}
                 <!--need a getPublishers function in insertQueries.js to get a list of publisher ids and names-->
                 <option value="{{id}}">{{name}}</option>
@@ -38,7 +38,7 @@
         <br>
         <label>
             Authors:
-            <Select name="authors" multiple size="4" required>
+            <Select name="authors" id="add_authors" multiple size="4" required>
                 {{#each authors}}
                 <!--need a getAuthors function in insertQueries.js-->
                 <option value="{{id}}">{{fullName}}</option>
@@ -49,7 +49,7 @@
         <br>
         <label>
             Genres:
-            <Select name="genres" multiple size="4" required>
+            <Select name="genres" id="add_genres" multiple size="4" required>
                 {{#each genres}}
                 <!--need a getGenres function in insertQueries.js-->
                 <option value="{{id}}">{{type}}</option>

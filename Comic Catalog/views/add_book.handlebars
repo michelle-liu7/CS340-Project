@@ -1,7 +1,7 @@
 <a href="/">Home</a>
 <h1 class="title">Add Books</h1>
 <div class="add_new_item">
-    <form action="/insertQueries/add_book" method="post">
+    <form id="add_book" action="/insertQueries/add_book" method="post">
         <label>Title: <input type="text" name="title" pattern="[a-zA-Z0-9:\s]+" title="Please enter only letters, numbers, and ':'" required></label>
         <br>
         <br>
@@ -58,8 +58,10 @@
         </label>
         <br>
         <br>
-        <input type="submit" value="Add" />
+        <!--input type="submit" value="Add" /-->
     </form>
+    <button onclick="addBook()">Add</button>
+    <br>
     <br>
     <button onclick="window.history.back()">Cancel</button>
 </div>

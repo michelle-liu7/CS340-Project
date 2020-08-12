@@ -187,7 +187,6 @@ module.exports = function(){
         var authors = req.body.authors;
         var x;
         if(!Array.isArray(authors)){
-          console.log("not array");
           inserts = [req.params.id, authors];
           mysql.pool.query(sql, inserts, function(err, rows){
             if(err){
@@ -228,7 +227,6 @@ module.exports = function(){
         var genres = req.body.genres;
         var x;
         if(!Array.isArray(genres)){
-          console.log("not array");
           inserts = [req.params.id, genres];
           mysql.pool.query(sql, inserts, function(err, rows){
             if(err){

@@ -85,9 +85,7 @@ module.exports = function(){
     var sql = "INSERT INTO Books_Genres (bid, gid) VALUES (?,?)";
     var genres = req.body.genres;
     var x;
-    console.log("genres: ", genres);
     if(!Array.isArray(genres)){
-      console.log("not array");
       inserts = [id, genres];
       mysql.pool.query(sql, inserts, function(err, rows){
         if(err){
@@ -98,9 +96,7 @@ module.exports = function(){
       });
     }
     else {
-      console.log("is array");
       for(x=0; x<genres.length; x++){
-        console.log("genres["+x+"]: " + genres[x]);
         inserts = [id, genres[x]];
         mysql.pool.query(sql, inserts, function(err, rows){
           if(err){

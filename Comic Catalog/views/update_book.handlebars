@@ -1,60 +1,61 @@
 <a href="/">Home</a>
 <!--need getBook function to return a book with the following attribute including publisherID, authorIDs, and genreIDs in inventory.js-->
 <h1 class="title">Update Book: {{book.title}}</h1>
-<form id="update_book" action="/inventory" method="post">
-    <label>Title: <input type="text" name="title" value="{{book.title}}"></label><br>
-    <label>Issue #: <input type="text" name="issue" value="{{book.issue}}"></label><br>
-    <label>UPC: <input type="text" name="upc" value="{{book.upc}}"></label><br>
-    <label>Price: <input type="text" name="price" value="{{book.price}}"></label><br>
+<div id="update_an_item">
+    <form id="update_book" action="/inventory" method="post">
+        <label>Title: <input id="update_title" type="text" name="title" value="{{book.title}}"></label><br>
+        <label>Issue #: <input id="update_issue" type="text" name="issue" value="{{book.issue}}"></label><br>
+        <label>UPC: <input id="update_upc" type="text" name="upc" value="{{book.upc}}"></label><br>
+        <label>Price: <input id="update_price" type="text" name="price" value="{{book.price}}"></label><br>
 
-    <label>
-        Owner: 
-        <Select name="owner" id="owner_selector">
-            <!--need a getOwners function in inventory.js to get a list of owner ids and names-->
-            {{#each owners}}
-            <option value="{{id}}">{{fullName}}</option>
-            {{/each}}
-        </Select>
-    </label><br>
+        <label>
+            Owner: 
+            <Select name="owner" id="owner_selector">
+                <!--need a getOwners function in inventory.js to get a list of owner ids and names-->
+                {{#each owners}}
+                <option value="{{id}}">{{fullName}}</option>
+                {{/each}}
+            </Select>
+        </label><br>
 
-    <label>
-        Publisher:
-        <Select name="publisher" id="publisher_selector">
-            <!--need a getPublishers function in inventory.js to get a list of publisher ids and names-->
-            {{#each publishers}}
-            <option value="{{id}}">{{name}}</option>
-            {{/each}}
-        </Select>
-    </label>
-    <br>
+        <label>
+            Publisher:
+            <Select name="publisher" id="publisher_selector">
+                <!--need a getPublishers function in inventory.js to get a list of publisher ids and names-->
+                {{#each publishers}}
+                <option value="{{id}}">{{name}}</option>
+                {{/each}}
+            </Select>
+        </label>
+        <br>
 
-    <label>
-        Authors:
-        <Select name="authors" multiple size="4" id="author_selector">
-            <!--need getAuthors function in inventory.js-->
-            {{#each authors}}
-            <option value="{{id}}">{{fullName}}</option>
-            {{/each}}
-        </Select>
-    </label>
-    <br>
+        <label>
+            Authors:
+            <Select name="authors" multiple size="4" id="author_selector">
+                <!--need getAuthors function in inventory.js-->
+                {{#each authors}}
+                <option value="{{id}}">{{fullName}}</option>
+                {{/each}}
+            </Select>
+        </label>
+        <br>
 
-    <label>
-        Genres:
-        <Select name="genres" multiple size="4" id="genre_selector">
-            <!--need a getGenres function-->
-            {{#each genres}}
-            <option value="{{id}}">{{type}}</option>
-            {{/each}}
-        </Select>
-    </label>
+        <label>
+            Genres:
+            <Select name="genres" multiple size="4" id="genre_selector">
+                <!--need a getGenres function-->
+                {{#each genres}}
+                <option value="{{id}}">{{type}}</option>
+                {{/each}}
+            </Select>
+        </label>
 
-    <br>
-    <br>
-</form>
-
-
-<button onclick="updateBook({{book.id}})">Update</button>
+        <br>
+        <br>
+    </form>
+    
+    <button onclick="updateBook({{book.id}})">Update</button>
+</div>
 
 <script defer>selectPublisher({{book.publisherID}});</script>
 <script defer>selectOwner({{book.ownerID}});</script>

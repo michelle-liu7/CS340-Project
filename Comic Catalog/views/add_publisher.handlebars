@@ -3,7 +3,7 @@
 
 <div class="add_new_item">
     <form action="/insertQueries/add_publisher" method="post">
-        <label>Publisher: <input type="text" name="name" required></label>
+        <label>Publisher: <input type="text" name="name" pattern="[A-Z][A-Za-z]*" title="Please enter letters only and capitalize the first letter" required></label>
         <br>
         <br>
         <input type="submit" value="Add" />

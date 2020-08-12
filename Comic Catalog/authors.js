@@ -4,7 +4,7 @@ module.exports = function(){
 
   //getAuthors function to get all authors
   function getAuthors(res, mysql, context, complete){
-    
+
     mysql.pool.query("SELECT authorID AS id, fname, lname FROM Authors", function(error, results, fields){
         if(error){
           res.write(JSON.stringify(error));
@@ -12,7 +12,7 @@ module.exports = function(){
         }
         context.authors = results;
         complete();
-    });  
+    });
   }
 
   // GET authors
@@ -38,17 +38,6 @@ module.exports = function(){
     var mysql = req.app.get('mysql');
     var sql = "DELETE FROM Books_Authors WHERE aid=?";
     var inserts = [req.params.id];
-
-    sql = mysql.pool.query(sql, inserts, function(error, results, fields){
-        if (error){
-          console.log(error);
-          res.write(JSON.stringify(error));
-          res.status(400);
-          res.end();
-        } 
-    });
-
-    sql = "DELETE FROM Authors WHERE authorID=?";
     sql = mysql.pool.query(sql, inserts, function(error, results, fields){
       if (error){
         console.log(error);
@@ -56,10 +45,19 @@ module.exports = function(){
         res.status(400);
         res.end();
       } else {
-        res.status(202).end();
+        sql = "DELETE FROM Authors WHERE authorID=?";
+        sql = mysql.pool.query(sql, inserts, function(error, results, fields){
+            if (error){
+              console.log(error);
+              res.write(JSON.stringify(error));
+              res.status(400);
+              res.end();
+            } else {
+              res.status(202).end();
+            }
+        });
       }
     });
-
   });
 
   return router;

@@ -4,7 +4,7 @@ module.exports = function(){
 
   //getGenres function to get all publishers
   function getGenres(res, mysql, context, complete){
-    
+
     mysql.pool.query("SELECT genreID AS id, type FROM Genres", function(error, results, fields){
         if(error){
           res.write(JSON.stringify(error));
@@ -12,7 +12,7 @@ module.exports = function(){
         }
         context.genres = results;
         complete();
-    });  
+    });
   }
 
   // GET genres
@@ -36,20 +36,28 @@ module.exports = function(){
   // DELETE a genre
   router.delete('/:id', (req, res) => {
     var mysql = req.app.get('mysql');
-    var sql = "DELETE FROM Genres WHERE genreID=?";
+    var sql = "DELETE FROM Books_Genres WHERE gid=?";
     var inserts = [req.params.id];
-
     sql = mysql.pool.query(sql, inserts, function(error, results, fields){
-        if (error){
-          console.log(error);
-          res.write(JSON.stringify(error));
-          res.status(400);
-          res.end();
-        } else {
-          res.status(202).end();
-        }
+      if (error){
+        console.log(error);
+        res.write(JSON.stringify(error));
+        res.status(400);
+        res.end();
+      } else {
+        sql = "DELETE FROM Genres WHERE genreID=?";
+        sql = mysql.pool.query(sql, inserts, function(error, results, fields){
+            if (error){
+              console.log(error);
+              res.write(JSON.stringify(error));
+              res.status(400);
+              res.end();
+            } else {
+              res.status(202).end();
+            }
+        });
+      }
     });
-
   });
 
   return router;

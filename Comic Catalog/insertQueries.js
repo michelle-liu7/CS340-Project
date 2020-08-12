@@ -56,8 +56,8 @@ module.exports = function(){
     var sql = "INSERT INTO Books_Authors (bid, aid) VALUES (?,?)";
     var authors = req.body.authors;
     var x;
-    for(x=0; x<authors.length; x++){
-      inserts = [id, authors[x]];
+    if(!Array.isArray(authors)){
+      inserts = [id, authors];
       mysql.pool.query(sql, inserts, function(err, rows){
         if(err){
           console.log(JSON.stringify(err));
@@ -66,6 +66,18 @@ module.exports = function(){
         }
       });
     }
+    else{
+      for(x=0; x<authors.length; x++){
+        inserts = [id, authors[x]];
+        mysql.pool.query(sql, inserts, function(err, rows){
+          if(err){
+            console.log(JSON.stringify(err));
+            res.write(JSON.stringify(err));
+            res.status(400).end();
+          }
+        });
+      }
+    }
   }
 
   // function to insert into the Books_Genres table when adding a book
@@ -73,8 +85,8 @@ module.exports = function(){
     var sql = "INSERT INTO Books_Genres (bid, gid) VALUES (?,?)";
     var genres = req.body.genres;
     var x;
-    for(x=0; x<genres.length; x++){
-      inserts = [id, genres[x]];
+    if(!Array.isArray(genres)){
+      inserts = [id, genres];
       mysql.pool.query(sql, inserts, function(err, rows){
         if(err){
           console.log(JSON.stringify(err));
@@ -82,6 +94,18 @@ module.exports = function(){
           res.status(400).end();
         }
       });
+    }
+    else {
+      for(x=0; x<genres.length; x++){
+        inserts = [id, genres[x]];
+        mysql.pool.query(sql, inserts, function(err, rows){
+          if(err){
+            console.log(JSON.stringify(err));
+            res.write(JSON.stringify(err));
+            res.status(400).end();
+          }
+        });
+      }
     }
   }
 
